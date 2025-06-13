@@ -1,0 +1,36 @@
+<article>
+  <header>
+    <h1><%= place.name_basic_adapt || place.name_place %></h1>
+    <% if (place.name_alternative_adapt) { %>
+      <h2><%= place.name_alternative_adapt %></h2>
+    <% } %>
+    <p><b>Category:</b> <%= place.name_category %> — <%= place.name_type %></p>
+  </header>
+
+  <p><b>Location:</b> <%= place.address_place %></p>
+  <p><b>Fees:</b>
+    Adults: <%= place.fee_adults_place %> |
+    Kids: <%= place.fee_kids_place %> |
+    Locals: <%= place.fee_locals_place %>
+  </p>
+
+  <% if (place.image_url_place) { %>
+    <img src="<%= place.image_url_place %>" alt="Image of <%= place.name_place %>">
+  <% } %>
+
+  <p><%= place.descr_full_place_adapt %></p>
+  <p><b>Tips:</b> <%= place.tips_place_adapt %></p>
+
+  <p>
+    Languages:
+    <a href="?lang=eng">English</a> ·
+    <a href="?lang=idn">Bahasa</a> ·
+    <a href="?lang=rus">Русский</a>
+  </p>
+
+  <% if (place.url_official_place) { %>
+    <footer>
+      <a href="<%= place.url_official_place %>">Official site</a>
+    </footer>
+  <% } %>
+</article>
