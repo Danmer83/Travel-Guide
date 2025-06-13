@@ -12,6 +12,7 @@ app.set('view engine', 'ejs');
 app.get('/p/:slug', async (req, res) => {
   const slug = req.params.slug;
   const lang = req.query.lang || 'eng';
+  console.log('Looking up slug:', slug, 'lang:', lang);
 
   try {
     const result = await pool.query(`
@@ -29,12 +30,13 @@ app.get('/p/:slug', async (req, res) => {
       WHERE slug_place = $1
     `, [slug, lang]);
 
-    if (result.rows.length === 0) return res.status(404).send('Not found');
+    console.log('Query result:', result.rows);
 
+    if (result.rows.length === 0) return res.status(404).send('Not found');
     res.render('place', { place: result.rows[0], lang });
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
+    console.error('DB Error:', err);
+    res.status(500).send('Internal Server Error');
   }
 });
 
