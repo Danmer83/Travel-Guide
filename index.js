@@ -31,18 +31,25 @@ app.get('/p/:slug', async (req, res) => {
 
   try {
     const result = await pool.query(`
-      SELECT
-        p.slug_place, p.name_place, p.lat_place, p.lng_place,
-        p.fee_adults_place, p.fee_kids_place, p.fee_locals_place,
-        p.address_place, p.image_url_place, p.url_official_place,
-        c.name_category, t.name_type,
-        pa.name_basic_adapt, pa.name_alternative_adapt,
-        pa.descr_full_place_adapt, pa.tips_place_adapt
-      FROM places p
-      LEFT JOIN categories c ON p.slug_category = c.slug_category
-      LEFT JOIN types t ON p.slug_type = t.slug_type
-      LEFT JOIN place_adaptations pa ON pa.id_place = p.id_place AND pa.id_language = $2
-      WHERE p.slug_place = $1
+SELECT
+  p.slug_place,
+  p.name_place,
+  p.lat_place,
+  p.lng_place,
+  p.address_place,
+  p.image_url_place,
+  p.url_official_place,
+  c.name_category,
+  t.name_type,
+  pa.name_basic_adapt,
+  pa.name_alternative_adapt,
+  pa.descr_full_place_adapt,
+  pa.tips_place_adapt
+FROM places p
+LEFT JOIN categories c ON p.slug_category = c.slug_category
+LEFT JOIN types t ON p.slug_type = t.slug_type
+LEFT JOIN place_adaptations pa ON pa.id_place = p.id_place AND pa.id_language = $2
+WHERE p.slug_place = $1
     `, [slug, langId]);
 
     console.log('Query result:', result.rows);
