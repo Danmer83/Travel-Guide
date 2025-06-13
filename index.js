@@ -34,7 +34,7 @@ app.get('/p/:slug', async (req, res) => {
 SELECT
   p.slug_place, p.name_place, p.lat_place, p.lng_place,
   c.name_category, t.name_type,
-  pa.name_basic_adapt, pa.name_alternative_adapt,
+  pa.name_basic_adapt,
   pa.descr_full_place_adapt, pa.tips_place_adapt
 FROM places p
 LEFT JOIN categories c ON p.slug_category = c.slug_category
