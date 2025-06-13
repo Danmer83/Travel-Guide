@@ -1,18 +1,10 @@
-const express = require('express');
-const { Pool } = require('pg');
-const app = express();
-const port = process.env.PORT || 3000;
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-app.set('view engine', 'ejs');
-
 app.get('/p/:slug', async (req, res) => {
   const slug = req.params.slug;
-  const lang = req.query.lang || 'eng';
-  console.log('Looking up slug:', slug, 'lang:', lang);
+  const langMap = { eng: 1, rus: 2 }; // adjust based on your DB data
+  const langCode = req.query.lang || 'eng';
+  const langId = langMap[langCode] || 1;
+
+  console.log('Looking up slug:', slug, 'lang:', langCode, 'langId:', langId);
 
   try {
     const result = await pool.query(`
@@ -28,18 +20,14 @@ app.get('/p/:slug', async (req, res) => {
       LEFT JOIN types t ON p.slug_type = t.slug_type
       LEFT JOIN place_adaptations pa ON pa.id_place = p.id_place AND pa.id_language = $2
       WHERE slug_place = $1
-    `, [slug, lang]);
+    `, [slug, langId]);
 
     console.log('Query result:', result.rows);
 
     if (result.rows.length === 0) return res.status(404).send('Not found');
-    res.render('place', { place: result.rows[0], lang });
+    res.render('place', { place: result.rows[0], lang: langCode });
   } catch (err) {
     console.error('DB Error:', err);
     res.status(500).send('Internal Server Error');
   }
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
 });
