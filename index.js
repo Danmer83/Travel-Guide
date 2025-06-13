@@ -1,3 +1,20 @@
+const express = require('express');
+const { Pool } = require('pg');
+const app = express();
+const port = process.env.PORT || 3000;
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+app.set('view engine', 'ejs');
+
+// <-- Add this root route here:
+app.get('/', (req, res) => {
+  res.send('Hello! Use /p/:slug?lang=eng to see place info.');
+});
+
+// Your existing /p/:slug route
 app.get('/p/:slug', async (req, res) => {
   const slug = req.params.slug;
   const langMap = { eng: 1, rus: 2 }; // adjust based on your DB data
@@ -30,4 +47,8 @@ app.get('/p/:slug', async (req, res) => {
     console.error('DB Error:', err);
     res.status(500).send('Internal Server Error');
   }
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
